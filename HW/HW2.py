@@ -6,22 +6,23 @@ def choose_pivot2(nums):
     #return nums[-1]
     return -1
 
-def choose_pivot3(nums):
-    first = nums[0]
-    last = nums[-1]
-    if len(nums) % 2 == 0:
-        mid = nums[len(nums)/2-1]
+def choose_pivot3(nums, lo, hi):
+    first = nums[lo]
+    last = nums[hi]
+    if (hi - lo) % 2 == 0:
+        mid = nums[(lo+hi)/2]
     else:
-        mid = nums[len(nums)/2]
+        mid = nums[(lo+hi)/2]
     pivot = (first + mid + last) - max(first, mid, last) - min(first, mid, last)
+    #print 17, pivot, first, mid, last
     if pivot == first:
-        return 0
+        return lo
     elif pivot == last:
-        return len(nums) - 1
+        return hi
     elif len(nums) % 2 == 0:
-        return len(nums)/2 - 1
+        return (lo+hi)/2
     else:
-        return len(nums)/2
+        return (lo+hi)/2
     
 def partition1(nums, lo, hi):
     # Pick the 1st element
@@ -73,7 +74,8 @@ def quick_sort(nums, lo, hi, op):
             nums[lo], nums[hi] = nums[hi], nums[lo]
             p = partition1(nums, lo, hi)
         elif op == 3:
-            p = choose_pivot3(nums)
+            p = choose_pivot3(nums, lo, hi)
+            #print 'v3', nums[lo], nums[hi], nums[p], nums
             nums[lo], nums[p] = nums[p], nums[lo]
             p = partition1(nums, lo, hi)
         #print 70, p, lo, hi
@@ -105,15 +107,17 @@ test2 = [9,8]
 
 test10 = [3,9,8,4,6,10,2,5,7,1]
 
-file_name = 'hw2_test1000.txt' #'QuickSort.txt'
+file_name = 'QuickSort.txt' #'hw2_test1000.txt' #'QuickSort.txt'
 lines = [line.strip('\r\n') for line in open(file_name)]
 lines = [int(line) for line in lines]
 test =  lines[:]
 #test = test2
-#print 'v1', quick_sort(test, 0, len(test) - 1, 1)
+print 'v1', quick_sort(test, 0, len(test) - 1, 1)
 #print test
 test = lines[:]
-print 'v2', quick_sort(test, 0, len(test) - 1, 3)
+print 'v2', quick_sort(test, 0, len(test) - 1, 2)
+test = lines[:]
+print 'v3', quick_sort(test, 0, len(test) - 1, 3)
 print test[:50]
 
                                   
