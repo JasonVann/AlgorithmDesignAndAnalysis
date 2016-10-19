@@ -2,8 +2,9 @@ import random
 import math
 
 def rand_two2(left_vertices,arr):
-    u = random.randint(1, len(left_vertices) - 1)
+
     while True:
+        u = random.randint(1, len(left_vertices) - 1)
         v = random.randint(1, len(left_vertices) - 1)
         if u != v:
             #Then make sure u and v are connected directly
@@ -16,12 +17,14 @@ def rand_two2(left_vertices,arr):
 def rand_two(dic):
     left_vertices = dic.keys()
     #u = random.randint(1, len(left_vertices) - 1)
-    u = random.choice(left_vertices)
-    #print 18, dic, u
+
+    
     found = False
     while True:
+        u = random.choice(left_vertices)
         #v = random.randint(1, len(left_vertices) - 1)
         v = random.choice(left_vertices)
+        print 27, dic, u, v
         if u != v:
             #Then make sure u and v are connected directly
             if v in dic[u]:
@@ -65,12 +68,15 @@ def master():
     dic = load_data()
     n = len(dic)
     cur = -1
+    print 68, dic
     #for i in range(int(n**2*math.log(n))):
     for i in range(2):    
         dic2 = dict(dic)
         temp = rand_contract(dic2)
-        if cur == -1 or len(temp) < cur:
-            cur = len(temp)
+        for key, val in temp.items():
+            count = len(val) - 1
+        if cur == -1 or count < cur:
+            cur = count
             
     print 67, dic, dic2, cur
     
