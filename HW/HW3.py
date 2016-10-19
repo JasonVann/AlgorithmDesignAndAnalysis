@@ -14,18 +14,17 @@ def rand_two2(left_vertices,arr):
                 break
     return (u, v)
 
-def rand_two(dic):
+def rand_two(dic, dic_visited):
     left_vertices = dic.keys()
     #u = random.randint(1, len(left_vertices) - 1)
-
     
     found = False
     while True:
         u = random.choice(left_vertices)
         #v = random.randint(1, len(left_vertices) - 1)
         v = random.choice(left_vertices)
-        print 27, dic, u, v
-        if u != v:
+        #print 27, dic, u, v
+        if u != v and u not in dic_visited and v not in dic_visited:
             #Then make sure u and v are connected directly
             if v in dic[u]:
                 break
@@ -39,25 +38,37 @@ def rand_contract(dic):
 
     dic_visited = {}
     while True:
-        (u, v) = rand_two(dic)
+        (u, v) = rand_two(dic, dic_visited)
         #Assume v is absorbed by u
-        #print 41, dic, u, v
+        print 41, dic, u, v
         val_u = dic[u]
         val_v = dic[v]
-        dic_visited[u] = val_u
+        #dic_visited[u] = val_u
         dic_visited[v] = val_v
-        
-        dic.pop(u)
+        # remove edge u-v
+        val_u.remove(v)
+        val_v.remove(u)
+        dic[u] = val_u
+        dic[v] = val_v
+        '''
+        dic[u] = list(set(val_u+val_v))
+        if u in dic[u]:
+            dic[u].remove(u)
+        #dic.pop(u)
         dic.pop(v)
         for key, val in dic.items():
             if v in val:
                 val.remove(v)
-                if u not in val:
+                if u not in val and key != u:
+                    #print 56, val, u, v, dic
                     val.append(u)
                     #print 49, val
-                dic[key] = val
+                #if key == u and v in val:
         
-        if len(dic) == 2:
+                dic[key] = val
+        '''
+        print 59, dic, dic_visited, u, v
+        if len(dic) - len(dic_visited) == 2:
             break
     #print dic, dic_visited
     return dic
@@ -73,15 +84,16 @@ def master():
     for i in range(2):    
         dic2 = dict(dic)
         temp = rand_contract(dic2)
-        for key, val in temp.items():
-            count = len(val) - 1
+        #for key, val in temp.items():
+        #count = len(val)
+        count = len(dic2)
         if cur == -1 or count < cur:
             cur = count
             
     print 67, dic, dic2, cur
     
 def load_data():
-    file_name = "HW3_Test1.txt"
+    file_name = "HW3_Test12.txt"
     lines = [line.strip("\r\n") for line in open(file_name)]
     
     dic = {}
