@@ -1,6 +1,8 @@
 import random
 import math
 
+# This version maintains the history of merging, which is too complex
+
 def rand_two2(left_vertices,arr):
 
     while True:
@@ -14,7 +16,7 @@ def rand_two2(left_vertices,arr):
                 break
     return (u, v)
 
-def rand_two(dic, dic_visited):
+def rand_two3(dic, dic_visited):
     left_vertices = dic.keys()
     #u = random.randint(1, len(left_vertices) - 1)
     
@@ -24,14 +26,58 @@ def rand_two(dic, dic_visited):
         #v = random.randint(1, len(left_vertices) - 1)
         v = random.choice(left_vertices)
         #print 27, dic, u, v
-        if u != v and u not in dic_visited and v not in dic_visited:
+        if u != v and u not in dic_visited and v not in dic_visited and len(dic[u]) > 0 and len(dic[v]) > 0:
             #Then make sure u and v are connected directly
             if v in dic[u]:
                 break
             
     return (u, v)
 
+def rand_two(dic):
+    left_vertices = dic.keys()
+    #u = random.randint(1, len(left_vertices) - 1)
+    all_keys = []
+    for key in dic.keys():
+        if isinstance(key, tuple):
+            all_keys += list(key)
+        else:
+            all_keys += [key]
+        
+    found = False
+    while True:
+        u = random.choice(all_keys)
+        #v = random.randint(1, len(left_vertices) - 1)
+        v = random.choice(all_keys)
+        #print 27, dic, u, v
+        if u != v:
+            #Then make sure u and v are connected directly
+            for key, val in dic.items():
+                if u in key and v in val:
+                    break
+            #if v in dic[u]:
+            #    break
+            
+    return (u, v)
+
 def rand_contract(dic):
+    while True:
+        (u, v) = rand_two(dic)
+        #v is absorbed by u
+        dic2 = dict(dic)
+        for key, val in dic.items():
+            if u in key:
+                val2 = dic2[key]
+                dic2.pop(key)
+                val2.remove(v)
+                key2 = tuple(list(key)+[v])
+                dic2[key2] = val2
+                dic2.pop(v)
+        dic = dic2
+        if len(dic) == 2:
+            break
+            
+
+def rand_contract2(dic):
     visited = []
     #for i in range(len(all)):
     #left_vertices = [k[0] for k in arr]
@@ -50,6 +96,12 @@ def rand_contract(dic):
         val_v.remove(u)
         dic[u] = val_u
         dic[v] = val_v
+        for key, vals in dic_visited.items():
+            if u in vals and v in vals:
+                if key in val_u:
+                    val_u.remove(key)
+                    break
+                
         '''
         dic[u] = list(set(val_u+val_v))
         if u in dic[u]:
@@ -72,7 +124,8 @@ def rand_contract(dic):
             break
     #print dic, dic_visited
     return dic
-    
+
+        
 def master():
     #Call multiple times
     
