@@ -1,8 +1,8 @@
 # HW4, find SCCs
 
 def load_data():
-    #file_name = "SCC.txt"
-    file_name = "HW4_Test4.txt"
+    file_name = "SCC.txt"
+    #file_name = "HW4_Test5.txt"
     lines = [line.strip("\r\n") for line in open(file_name)]
     dic = {}
     for line in lines:
@@ -45,9 +45,9 @@ def master():
     print 44, n
     
     # Iter 1
-    print 6, dic_r
+    #print 6, dic_r
     DFS_Loop(dic_r)
-    print 7, dic_r
+    #print 7, dic_r
     
     # Iter 2
     dic3 = {}
@@ -56,7 +56,7 @@ def master():
         (s, t) = v
         dic_replace[k] = t
 
-    print 53, dic_replace
+    #print 53, dic_replace
     
     print 55, 'Now iter2'
     dic_iter2 = {}
@@ -65,15 +65,15 @@ def master():
         k2 = dic_replace[k]
         v2 = [dic_replace[e] for e in v]
         dic_iter2[k2] = v2
-    print 61, dic_iter2
+    #print 61, dic_iter2
     #return
     #print 49, d_visited
     #print 50, dic
     #print 51, dic3
     #return
     DFS_Loop(dic_iter2)
-    print 57, dic_iter2
-    print 58, d_visited
+    #print 57, dic_iter2
+    #print 58, d_visited
     leaders = []
     d_res = {}
     for v in d_visited.values():
@@ -103,10 +103,11 @@ def DFS_Loop(dic):
     s = -1
     #n = max(dic.keys())
     for i in range(n, 0, -1):
-        print 98, i, dic
-        if i not in dic:
+        #print 98, i, dic
+        if i not in dic and i not in d_visited:
             t += 1
             d_visited[i] = (s, t)
+            continue
         if i not in d_visited:
             s = i
             DFS(dic, i)
@@ -117,22 +118,32 @@ def DFS(dic, i):
     global t
     global s # leader
     d_visited[i] = s
-    print 74, i, s, t, d_visited
-    print 109, i, dic
-    for j in dic[i]:
-        if j not in d_visited:
-            DFS(dic, j)
+    #print 74, i, s, t, d_visited
+    #print 109, i, dic
+    if i in dic:
+    #    return
+    #else:
+        for j in dic[i]:
+            if j not in d_visited:
+                DFS(dic, j)
     t += 1
     d_visited[i] = (s, t)
-    print 37, i, s, t, d_visited
-    print 38, dic
+    #print 37, i, s, t, d_visited
+    #print 38, dic
 
+import time
+start_time = time.time()
 
 dic = load_data()
-print 75, dic
+#print 75, dic
 #dic_r = get_Grev(dic)
 #print 77, dic_r
-master()
+
+
+#master()
+
+print time.time() - start_time
+
 
 '''
 t = 0
