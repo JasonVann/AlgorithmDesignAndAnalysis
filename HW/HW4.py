@@ -2,7 +2,7 @@
 
 def load_data():
     #file_name = "SCC.txt"
-    file_name = "HW4_Test3.txt"
+    file_name = "HW4_Test4.txt"
     lines = [line.strip("\r\n") for line in open(file_name)]
     dic = {}
     for line in lines:
@@ -35,8 +35,14 @@ def get_Grev(dic):
 
 def master():
     global d_visited
+    global n
+    
     dic = load_data()
     dic_r = get_Grev(dic)
+
+    n = max(max(dic.keys()), max(dic_r.keys()))
+    
+    print 44, n
     
     # Iter 1
     print 6, dic_r
@@ -51,6 +57,7 @@ def master():
         dic_replace[k] = t
 
     print 53, dic_replace
+    
     print 55, 'Now iter2'
     dic_iter2 = {}
     #for i in range(1, len(dic) + 1):
@@ -90,11 +97,16 @@ def DFS_Loop(dic):
     global d_visited
     global t
     global s
+    global n
     d_visited = {}
     t = 0
     s = -1
-    n = len(dic)
+    #n = max(dic.keys())
     for i in range(n, 0, -1):
+        print 98, i, dic
+        if i not in dic:
+            t += 1
+            d_visited[i] = (s, t)
         if i not in d_visited:
             s = i
             DFS(dic, i)
