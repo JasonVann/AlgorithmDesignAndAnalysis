@@ -1,4 +1,8 @@
 # HW4, find SCCs
+#import resource
+import sys
+#resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
+#sys.setrecursionlimit(3*10**6)
 
 def load_data():
     file_name = "SCC.txt"
@@ -30,7 +34,7 @@ def get_Grev(dic):
                 dic_r[v] = dic_r[v] + [key]
             else:
                 dic_r[v] = [key]
-    print dic_r
+    #print dic_r
     return dic_r
 
 def master():
@@ -39,15 +43,19 @@ def master():
     
     dic = load_data()
     dic_r = get_Grev(dic)
-
+    #print 46, dic
     n = max(max(dic.keys()), max(dic_r.keys()))
     
-    print 44, n
+    print 44, n, 'a'
     
     # Iter 1
     #print 6, dic_r
     DFS_Loop(dic_r)
     #print 7, dic_r
+    
+    #print 56, dic_r
+    #print 57, d_visited
+    #return
     
     # Iter 2
     dic3 = {}
@@ -68,8 +76,10 @@ def master():
     #print 61, dic_iter2
     #return
     #print 49, d_visited
+    #print 79, dic_replace
     #print 50, dic
     #print 51, dic3
+    #print 82, dic_iter2
     #return
     DFS_Loop(dic_iter2)
     #print 57, dic_iter2
@@ -84,15 +94,14 @@ def master():
         else:
             d_res[a] += [b]
     
-    print 77, leaders, d_res
+    #print 77, leaders, d_res
     group = d_res.values()
     count = [len(e) for e in group]
-    print count
+    #print count
     count += [0,0,0,0,0]
     count.sort(reverse=True)
     print count[:5]
     
-
 def DFS_Loop(dic):
     global d_visited
     global t
@@ -110,8 +119,75 @@ def DFS_Loop(dic):
             continue
         if i not in d_visited:
             s = i
-            DFS(dic, i)
-    print 25, d_visited
+            #DFS(dic, i)
+            DFS_iter(dic, i)
+    #print 25, d_visited
+   
+def DFS_iter(dic,v):
+    global d_visited
+    global t
+    global s
+    stack = []
+    stack.append(v)
+    #print 155, stack
+    while stack != []:
+        v = stack[-1]
+        has_add = False
+        if v not in d_visited:
+            d_visited[v] = s
+            if v in dic:
+                #for j in dic[v]:
+                for k in range(len(dic[v])-1, -1, -1):
+                    j = dic[v][k]
+                    if j not in stack and j not in d_visited:
+                        stack.append(j)
+                        has_add = True
+        
+        found = False
+        if v in dic:
+            for k in dic[v]:
+                if k in stack and k not in d_visited:
+                    found = True # more in the chain to explore
+                    break
+        if found and has_add:
+            #print 171, (s, t), stack
+            #print 172, d_visited
+            continue
+        
+        t += 1
+        if v not in d_visited or isinstance(d_visited[v], int):
+            d_visited[v] = (s, t)
+            stack.pop(-1)
+        #print 163, (s, t), stack
+        #print 164, d_visited
+
+def DFS_tail(dic, i, done = False, to_visit = []):
+    # ???
+    global d_visited
+    global t
+    global s # leader
+    d_visited[i] = s
+    #print 74, i, s, t, d_visited
+    #print 109, i, dic
+    
+    if done and to_visit == []:
+        t += 1
+        d_visited[i] = (s, t)
+        return 
+        
+    if i in dic:
+    #    return
+    #else:
+        for j in dic[i]:
+            if j in d_visited:
+                if j in to_visit:
+                    to_visit.remove(j)
+                #return 
+                
+            if j not in d_visited:
+                to_visit += [j]
+                DFS_tail(dic, j, done, to_visit)
+    
     
 def DFS(dic, i):
     global d_visited
@@ -120,6 +196,7 @@ def DFS(dic, i):
     d_visited[i] = s
     #print 74, i, s, t, d_visited
     #print 109, i, dic
+    
     if i in dic:
     #    return
     #else:
@@ -134,13 +211,14 @@ def DFS(dic, i):
 import time
 start_time = time.time()
 
+'''
 dic = load_data()
-#print 75, dic
-#dic_r = get_Grev(dic)
-#print 77, dic_r
+print 75, dic
+dic_r = get_Grev(dic)
+print 77, dic_r
+'''
 
-
-#master()
+master()
 
 print time.time() - start_time
 
