@@ -2,11 +2,60 @@
 #import resource
 import sys
 #resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
-#sys.setrecursionlimit(3*10**6)
+sys.setrecursionlimit(3*10**8)
+
+import time
+start_time = time.time()
+
+def gen_test():
+    file_name = "SCC.txt"
+    #file_name = "HW4_Test6.txt"
+    to_name = "SCC_400K.txt" #[261,244,219,198,196]
+    n = 5*10**4
+    target = open(to_name, 'w')
+
+    target.truncate()
+    
+    lines = [line.strip("\r\n") for line in open(file_name)]
+    dic = {}
+    for line in lines:
+        if len(line) > 0:
+            line = line.strip().split('\t')
+            if len(line) == 1:
+                line = line[0].strip().split(' ')
+            key = int(line[0])
+            val = int(line[1])
+
+            if key > n or val > n:
+                continue
+
+            key = str(key)
+            val = str(val)
+
+            #print key, val
+
+            target.write(key)
+            target.write('\t')
+            target.write(val)
+            target.write('\n')
+            
+            '''
+            #print key, val
+            if key not in dic:
+                dic[key] = [val]
+            else:
+                dic[key] = dic[key] + [val]
+            '''
+    #print dic
+    return dic
+
+#gen_test()
 
 def load_data():
     file_name = "SCC.txt"
-    #file_name = "HW4_Test5.txt"
+    file_name = "HW4_Test5.txt"
+    #file_name = "pa4_test_case_6.txt" #[261,244,219,198,196]
+    file_name = "SCC_400K.txt"
     lines = [line.strip("\r\n") for line in open(file_name)]
     dic = {}
     for line in lines:
@@ -115,12 +164,12 @@ def DFS_Loop(dic):
         #print 98, i, dic
         if i not in dic and i not in d_visited:
             t += 1
-            d_visited[i] = (s, t)
+            d_visited[i] = (i, t)
             continue
         if i not in d_visited:
             s = i
-            #DFS(dic, i)
-            DFS_iter(dic, i)
+            DFS(dic, i)
+            #DFS_iter(dic, i)
     #print 25, d_visited
    
 def DFS_iter(dic,v):
@@ -208,8 +257,6 @@ def DFS(dic, i):
     #print 37, i, s, t, d_visited
     #print 38, dic
 
-import time
-start_time = time.time()
 
 '''
 dic = load_data()
