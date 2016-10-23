@@ -5,7 +5,7 @@ import sys
 sys.setrecursionlimit(3*10**6)
 
 def load_data():
-    file_name = "SCC_100K.txt"
+    file_name = "SCC.txt"
     #file_name = "HW4_Test5.txt"
     lines = [line.strip("\r\n") for line in open(file_name)]
     dic = {}
@@ -132,6 +132,7 @@ def DFS_iter(dic,v):
     #print 155, stack
     while stack != []:
         v = stack[-1]
+        temp_n = len(stack)
         has_add = False
         if v not in d_visited:
             d_visited[v] = s
@@ -146,7 +147,7 @@ def DFS_iter(dic,v):
         found = False
         if v in dic:
             for k in dic[v]:
-                if k in stack and k not in d_visited:
+                if k in stack[temp_n - 1:] and k not in d_visited:
                     found = True # more in the chain to explore
                     break
         if found and has_add:
