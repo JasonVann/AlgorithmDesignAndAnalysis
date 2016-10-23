@@ -10,8 +10,8 @@ start_time = time.time()
 def gen_test():
     file_name = "SCC.txt"
     #file_name = "HW4_Test6.txt"
-    to_name = "SCC_400K.txt" #[261,244,219,198,196]
-    n = 5*10**4
+    to_name = "SCC_8.txt" 
+    n = 8
     target = open(to_name, 'w')
 
     target.truncate()
@@ -39,13 +39,6 @@ def gen_test():
             target.write(val)
             target.write('\n')
             
-            '''
-            #print key, val
-            if key not in dic:
-                dic[key] = [val]
-            else:
-                dic[key] = dic[key] + [val]
-            '''
     #print dic
     return dic
 
@@ -53,9 +46,9 @@ def gen_test():
 
 def load_data():
     file_name = "SCC.txt"
-    file_name = "HW4_Test5.txt"
+    #file_name = "HW4_Test4.txt"
     #file_name = "pa4_test_case_6.txt" #[261,244,219,198,196]
-    file_name = "SCC_400K.txt"
+    file_name = "SCC_100K.txt"
     lines = [line.strip("\r\n") for line in open(file_name)]
     dic = {}
     for line in lines:
@@ -86,16 +79,23 @@ def get_Grev(dic):
     #print dic_r
     return dic_r
 
+'''
+10K: 0.13
+50K: 38
+100K: 250
+'''
+
 def master():
     global d_visited
     global n
+    global start_time
     
     dic = load_data()
     dic_r = get_Grev(dic)
     #print 46, dic
     n = max(max(dic.keys()), max(dic_r.keys()))
     
-    print 44, n, 'a'
+    print(44, n, 'a', time.time() - start_time)
     
     # Iter 1
     #print 6, dic_r
@@ -115,7 +115,7 @@ def master():
 
     #print 53, dic_replace
     
-    print 55, 'Now iter2'
+    print(55, 'Now iter2')
     dic_iter2 = {}
     #for i in range(1, len(dic) + 1):
     for k, v in dic.items():
@@ -149,7 +149,7 @@ def master():
     #print count
     count += [0,0,0,0,0]
     count.sort(reverse=True)
-    print count[:5]
+    print(count[:5])
     
 def DFS_Loop(dic):
     global d_visited
@@ -160,7 +160,7 @@ def DFS_Loop(dic):
     t = 0
     s = -1
     #n = max(dic.keys())
-    for i in range(n, 0, -1):
+    for i in range(n, 0, -1): 
         #print 98, i, dic
         if i not in dic and i not in d_visited:
             t += 1
@@ -168,45 +168,70 @@ def DFS_Loop(dic):
             continue
         if i not in d_visited:
             s = i
-            DFS(dic, i)
-            #DFS_iter(dic, i)
+            #DFS(dic, i)
+            DFS_iter(dic, i)
     #print 25, d_visited
+
+stack_op = 0
    
 def DFS_iter(dic,v):
     global d_visited
     global t
     global s
+    global stack_op
     stack = []
     stack.append(v)
+    stack_op += 1
+    stack_helper = {} # Use dic to speed up "is in" op: O(1) VS O(n)
     #print 155, stack
     while stack != []:
         v = stack[-1]
+        #temp_n = len(stack)
         has_add = False
         if v not in d_visited:
-            d_visited[v] = s
+            #d_visited[v] = s
+            d_visited[v] = (s, 0)
             if v in dic:
                 #for j in dic[v]:
-                for k in range(len(dic[v])-1, -1, -1):
-                    j = dic[v][k]
-                    if j not in stack and j not in d_visited:
+                temp = dic[v]
+                for k in range(len(temp)-1, -1, -1):
+                    j = temp[k]
+                    if j not in stack_helper and j not in d_visited:                    
                         stack.append(j)
+                        stack_helper[j] = 0
+                        stack_op += 1
                         has_add = True
-        
+                        j2 = j
+        '''
         found = False
         if v in dic:
             for k in dic[v]:
-                if k in stack and k not in d_visited:
+                if k in stack_helper and k not in d_visited:
                     found = True # more in the chain to explore
+                    k2 = k
                     break
+        if found != has_add:
+            print 212, k2, j2, found, has_add
+            return 
+            #print 196
+        
         if found and has_add:
+        '''
+        if has_add:
             #print 171, (s, t), stack
             #print 172, d_visited
             continue
         
         t += 1
-        if v not in d_visited or isinstance(d_visited[v], int):
+        #if v not in d_visited or isinstance(d_visited[v], int):
+        if v not in d_visited:
             d_visited[v] = (s, t)
             stack.pop(-1)
+        else:
+            (a, b) = d_visited[v]
+            if b == 0:
+                d_visited[v] = (s, t)
+                stack.pop(-1)
         #print 163, (s, t), stack
         #print 164, d_visited
 
@@ -267,8 +292,8 @@ print 77, dic_r
 
 master()
 
-print time.time() - start_time
-
+print(time.time() - start_time)
+print(stack_op)
 
 '''
 t = 0
