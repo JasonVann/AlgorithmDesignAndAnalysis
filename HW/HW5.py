@@ -34,6 +34,7 @@ def master():
     A = naive(dic)
     print 'res', A[7],A[37],A[59],A[82],A[99],A[115],A[133],A[165],A[188],A[197]
     
+
 def naive(dic):
     global no_path
     global X
