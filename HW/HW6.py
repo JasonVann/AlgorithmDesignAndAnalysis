@@ -28,7 +28,8 @@ def cal_2sum():
     '''
     dic2 = copy.deepcopy(dic)
     for k,v in dic.items():
-        for i in range(-100, 100+1, 1):
+    #for k in dic:
+        for i in range(-10000, 10000+1, 1):
             if i in dic_t:
                 continue
             if i - k != k and (i - k) in dic:
